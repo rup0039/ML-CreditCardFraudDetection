@@ -1,6 +1,7 @@
 # 1.0 Import Libraries
 
 import pandas as pd
+import numpy as np
 import os
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -36,39 +37,20 @@ X_train.columns
 
 %matplotlib qt5
 
-plt.scatter('V2','V3', c= y_train, data = X_train)
+pd.plotting.radviz(X_train,'Class',colormap=plt.cm.winter)
 
-columns = X_train.columns
-fig, axs = plt.subplots(10, 3,figsize=(30,40))
-for i, ax in enumerate(axs.flat):
-    ax.boxplot([X_train[X_train['Class']==1][columns[i]],X_train[X_train['Class']==0][columns[i]]],labels=[1,0])
+# Radviz plt indicate parameters seperate fraud transactions from normal transactions
 
 plt.imshow(X_train.corr(),cmap = 'gray')
 plt.colorbar()
-# Plots to check pattern in data just for academic purposes
 
 
-
-
-pd.plotting.radviz(X_train,'Class',colormap=plt.cm.winter)
-pd.plotting.parallel_coordinates(X_train,'Class',colormap=plt.cm.winter)
-pd.plotting.andrews_curves(X_train,'Class',colormap=plt.cm.winter)
-
-#Plotting##############################################################################################
 plt.hist(X_train[X_train['Class']==1]['Amount'])
 plt.hist(X_train[X_train['Class']==0]['Amount'])
-plt.hist([X_train[X_train['Class']==1]['Amount'],X_train[X_train['Class']==0]['Amount']])
-################################################################################################
 
-fig,ax1 = plt.subplots()
-ax1.set_ylabel("Fraud Amount")
-ax1.set_xlabel("Time")
-#ax1.legend("Fraud")
-ax1.scatter('Time','Amount',c="red",label="Fraud",data=X_train[X_train['Class']==1])
-ax1.legend(loc="upper left")
-
-ax2 = ax1.twinx()
-ax2.set_ylabel("Non Fraud Amount")
-ax2.scatter('Time','Amount',c="blue",label="Non-Fraud",data=X_train[X_train['Class']==0])
-ax2.legend(loc="upper right")
-#plt.legend()
+# Fraud transactions amount are smaller in comparison to normal transactions, it may be due to 
+# amount greater than a threshold involves more layer of security
+fig, ax = plt.subplots(2,1,figsize=(6,6))
+ax[0].scatter(x='Time', y='Amount', data = X_train[X_train['Class']==1],label = 'Fraud')
+ax[1].scatter(x='Time', y='Amount', data = X_train[X_train['Class']==0],label = 'Normal')
+plt.legend()
